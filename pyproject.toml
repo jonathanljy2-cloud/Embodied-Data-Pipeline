@@ -1,0 +1,26 @@
+[project]
+name = "embodied-data-pipeline"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "jonathanljy2-cloud",email = "jonathanljy2@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "opencv-python (>=4.13.0.92,<5.0.0.0)",
+    "pandas (>=3.0.2,<4.0.0)",
+    "pyarrow (>=23.0.1,<24.0.0)",
+    "pyyaml (>=6.0.3,<7.0.0)",
+    "tqdm (>=4.67.3,<5.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "pytest (>=9.0.3,<10.0.0)"
+]
