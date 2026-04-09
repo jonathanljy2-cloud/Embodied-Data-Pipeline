@@ -57,3 +57,10 @@ Train/Test Dataset Output
 | Storage | Parquet + S3/MinIO |
 | Orchestration | Airflow |
 | Analysis | DuckDB / Notebook |
+
+🚀 Quick Start (TL;DR)
+
+- pyenv install 3.12.4   # if not installed
+- pyenv local 3.12.4
+- poetry install
+- make run
