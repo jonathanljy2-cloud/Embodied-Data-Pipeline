@@ -7,8 +7,7 @@ __pycache__/
 venv/
 
 # 数据
-data/output/
-data/test_output/
+data/
 
 # OS
 .DS_Store
