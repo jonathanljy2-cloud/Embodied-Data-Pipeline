@@ -1,16 +1,20 @@
+from importlib.resources import path
+
 import cv2
 import os
 import pandas as pd
 
 def extract_frames(video_path, output_dir, fps=1):
     os.makedirs(output_dir, exist_ok=True)
-
+    
+    # 解码视频 → 逐帧读取
     cap = cv2.VideoCapture(video_path)
     video_fps = cap.get(cv2.CAP_PROP_FPS)
 
     if video_fps == 0:
         raise ValueError("Invalid video or cannot read FPS")
-
+    
+    # 原视频：30 FPS = 每 30 帧取 1 帧
     frame_interval = max(int(video_fps / fps), 1)
 
     frames = []
@@ -18,6 +22,7 @@ def extract_frames(video_path, output_dir, fps=1):
     saved_id = 0
 
     while True:
+        # frame = 一张图片（numpy array）
         ret, frame = cap.read()
         if not ret:
             break
@@ -42,3 +47,10 @@ def extract_frames(video_path, output_dir, fps=1):
     cap.release()
 
     return pd.DataFrame(frames)
+
+# frames -> metadata.parquet:
+# frame_id | timestamp | path
+# --------------------------------
+# 0        | 0.0       | frame_00000.jpg
+# 1        | 1.0       | frame_00001.jpg
+# ...
