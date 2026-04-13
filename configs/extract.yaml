@@ -1,0 +1,3 @@
+input: data/sample.mp4
+output: data/output
+fps: 1
