@@ -4,7 +4,7 @@ import cv2
 import os
 import pandas as pd
 
-def extract_frames(video_path, output_dir, fps=1):
+def extract_frames(video_path, output_dir, video_id, fps=1):
     os.makedirs(output_dir, exist_ok=True)
     
     # 解码视频 → 逐帧读取
@@ -37,7 +37,8 @@ def extract_frames(video_path, output_dir, fps=1):
             frames.append({
                 "frame_id": saved_id,
                 "timestamp": timestamp,
-                "path": filepath
+                "path": filepath,
+                "video_id": video_id
             })
 
             saved_id += 1
