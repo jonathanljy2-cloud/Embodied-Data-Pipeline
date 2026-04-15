@@ -4,6 +4,7 @@ import os
 import pandas as pd
 from pipelines.frame_extractor import extract_frames
 import logging
+import json
 
 logging.basicConfig(level=logging.INFO)
 
@@ -12,6 +13,9 @@ def main():
     parser.add_argument("--config", required=True)
     args = parser.parse_args()
     all_dfs = []
+    success = 0
+    failed = 0
+    total_frames = 0
 
     with open(args.config, "r") as f:
         cfg = yaml.safe_load(f)
@@ -33,20 +37,39 @@ def main():
                 video_id,
                 cfg.get("fps", 1)
             )
+            df.to_parquet(os.path.join(output_dir, "metadata.parquet"))
+            success += 1
+            total_frames += len(df)
         except Exception as e:
-            print(f"Failed {video_id}: {e}")
+            logger.error(f"{video_id} failed: {e}")
+            failed += 1
             continue
-
+        
         all_dfs.append(df)
-
-        df.to_parquet(os.path.join(output_dir, "metadata.parquet"))
 
         logger = logging.getLogger(__name__)
         logger.info(f"Processing {video_id}")
-        logger.info(f"Finished {video_id}, {len(df)} frames")
+        if len(df) == 0:
+            logger.warning(f"{video_id} has no frames")
+        else:
+            logger.info(f"Finished {video_id}, {len(df)} frames")
 
     final_df = pd.concat(all_dfs)
     final_df.to_parquet("data/output/metadata_all.parquet")
+
+    manifest = {
+    "total_videos": success + failed,
+    "success": success,
+    "failed": failed,
+    "total_frames": total_frames
+    }
+
+    manifest_path = os.path.join(cfg["output"], "manifest.json")
+
+    with open(manifest_path, "w") as f:
+        json.dump(manifest, f, indent=2)
+
+    print(f"Manifest saved to {manifest_path}")
 
 if __name__ == "__main__":
     main()
