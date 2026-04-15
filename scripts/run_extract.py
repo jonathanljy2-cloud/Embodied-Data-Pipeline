@@ -3,6 +3,9 @@ import yaml
 import os
 import pandas as pd
 from pipelines.frame_extractor import extract_frames
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -38,8 +41,9 @@ def main():
 
         df.to_parquet(os.path.join(output_dir, "metadata.parquet"))
 
-        print(f"Processed {video_id}")
-        print(f"Finished {video_id}, {len(df)} frames")
+        logger = logging.getLogger(__name__)
+        logger.info(f"Processing {video_id}")
+        logger.info(f"Finished {video_id}, {len(df)} frames")
 
     final_df = pd.concat(all_dfs)
     final_df.to_parquet("data/output/metadata_all.parquet")
